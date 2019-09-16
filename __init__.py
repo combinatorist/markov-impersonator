@@ -5,14 +5,9 @@ from random import choice
 from sys import argv
 
 
-def compress(text):
-    return re.findall(r"[\w]+|[^\s\w]", text)
-
-
 tokens = defaultdict(int)
 tokens['frog'] = 1
 tokens
-
 
 
 def tokenize(text):
