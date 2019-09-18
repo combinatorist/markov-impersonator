@@ -3,6 +3,7 @@ from collections import namedtuple
 from collections import defaultdict
 from random import choice
 from sys import argv
+from nltk import pos_tag, word_tokenize
 
 
 tokens = defaultdict(int)
@@ -85,15 +86,23 @@ def next(analysis, said=[]):
         token = choice(options)
         yield token
         said += (token,)
+
+
+def pad(tagged):
+    token, tag = (tagged)
+    padding = '' if token in '.,;?“’\'"' else ' '
+    return padding + token
         
         
 def main(text_file_path, word_count=500):
     with open(text_file_path, 'r') as f:
         text = f.read()
-    compressed_text = compress(tokenize(text))
+    tagged_text = pos_tag(word_tokenize(text))
+    compressed_text = compress(tagged_text)
     analyzed_text = analyze(compressed_text.compressed_text)
     conversation = next(analyzed_text)
-    text = ' '.join(compressed_text.index2token[conversation.__next__()] for x in range(word_count))
+    decompressed = [compressed_text.index2token[conversation.__next__()] for x in range(word_count)]
+    text = ''.join(pad(tagged) for tagged in decompressed)
     print(text)
 
 
